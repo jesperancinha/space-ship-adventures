@@ -1,0 +1,26 @@
+version: 2
+updates:
+
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    groups:
+      kotlin:
+        patterns:
+          - "org.jetbrains.kotlin.*"
+          - "com.google.devtools.ksp"
+          - "kotlin*"
+          - "*kotlin*"
+      spring:
+        patterns:
+          - "*spring*"
+      junit:
+        patterns:
+          - "junit*"
+          - "*junit*"
+      slf4j:
+         patterns:
+           - "*slf4j*"
+           - "slf4j*"
+           - "*slf4j"

@@ -8,12 +8,21 @@ plugins {
 }
 
 dependencies {
-    // Project "app" depends on project "utils". (Project paths are separated with ":", so ":utils" refers to the top-level "utils" project.)
     implementation(project(":utils"))
+    implementation(platform("io.ktor:ktor-bom:2.3.0"))
+    implementation("io.ktor:ktor-server-core")
+    implementation("io.ktor:ktor-server-netty")
+    implementation("io.ktor:ktor-client-core")
+    implementation("io.ktor:ktor-client-cio")
+    implementation("io.ktor:ktor-serialization-kotlinx-json")
+    implementation(platform("org.jetbrains.exposed:exposed-bom:0.60.0"))
+    implementation("org.jetbrains.exposed:exposed-core")
+    implementation("org.jetbrains.exposed:exposed-dao")
+    implementation("org.jetbrains.exposed:exposed-jdbc")
+    implementation("org.jetbrains.exposed:exposed-jdbc")
+    implementation("org.postgresql:postgresql:42.7.3")
 }
 
 application {
-    // Define the Fully Qualified Name for the application main class
-    // (Note that Kotlin compiles `App.kt` to a class with FQN `com.example.app.AppKt`.)
     mainClass = "org.jesperancinha.space.app.AppKt"
 }
