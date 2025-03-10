@@ -1,10 +1,14 @@
-package org.jesperancinha.space
+package org.jesperancinha.space.org.jesperancinha.space
 
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.jesperancinha.space.service.City
+import org.jesperancinha.space.service.CityService
+import org.jesperancinha.space.service.ExposedUser
+import org.jesperancinha.space.service.UserService
 import org.jetbrains.exposed.sql.Database
 import java.sql.Connection
 import java.sql.DriverManager

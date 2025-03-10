@@ -1,6 +1,8 @@
+package org.jesperancinha.space
+
 import io.ktor.client.request.*
 import io.ktor.server.testing.*
-import org.jesperancinha.space.configureDatabases
+import org.jesperancinha.space.org.jesperancinha.space.configureDatabases
 import kotlin.test.Test
 
 class DatabasesKtTest {

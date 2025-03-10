@@ -1,4 +1,4 @@
-package org.jesperancinha.space
+package org.jesperancinha.space.service
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.Serializable

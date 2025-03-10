@@ -46,5 +46,5 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.4.11")
     implementation("io.ktor:ktor-server-openapi:3.1.1")
     implementation("io.swagger.codegen.v3:swagger-codegen-generators:1.0.36")
-
+    implementation("org.jetbrains.exposed:exposed-java-time:0.43.0")
 }

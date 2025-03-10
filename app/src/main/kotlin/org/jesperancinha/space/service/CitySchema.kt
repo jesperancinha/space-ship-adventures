@@ -1,4 +1,4 @@
-package org.jesperancinha.space
+package org.jesperancinha.space.service
 
 import kotlinx.coroutines.*
 import kotlinx.serialization.Serializable
@@ -10,7 +10,7 @@ data class City(val name: String, val population: Int)
 class CityService(private val connection: Connection) {
     companion object {
         private const val CREATE_TABLE_CITIES =
-            "CREATE TABLE CITIES (ID SERIAL PRIMARY KEY, NAME VARCHAR(255), POPULATION INT);"
+            "CREATE TABLE IF NOT EXISTS CITIES (ID SERIAL PRIMARY KEY, NAME VARCHAR(255), POPULATION INT);"
         private const val SELECT_CITY_BY_ID = "SELECT name, population FROM cities WHERE id = ?"
         private const val INSERT_CITY = "INSERT INTO cities (name, population) VALUES (?, ?)"
         private const val UPDATE_CITY = "UPDATE cities SET name = ?, population = ? WHERE id = ?"
@@ -40,7 +40,6 @@ class CityService(private val connection: Connection) {
         }
     }
 
-    // Read a city
     suspend fun read(id: Int): City = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(SELECT_CITY_BY_ID)
         statement.setInt(1, id)
@@ -55,7 +54,6 @@ class CityService(private val connection: Connection) {
         }
     }
 
-    // Update a city
     suspend fun update(id: Int, city: City) = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(UPDATE_CITY)
         statement.setString(1, city.name)
@@ -64,7 +62,6 @@ class CityService(private val connection: Connection) {
         statement.executeUpdate()
     }
 
-    // Delete a city
     suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(DELETE_CITY)
         statement.setInt(1, id)
