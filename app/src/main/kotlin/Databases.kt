@@ -30,7 +30,7 @@ import org.koin.logger.slf4jLogger
 fun Application.configureDatabases() {
     val dbConnection: Connection = connectToPostgres(embedded = true)
     val cityService = CityService(dbConnection)
-    
+
     routing {
     
         // Create city
