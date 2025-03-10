@@ -21,6 +21,8 @@ class UserService(database: Database) {
 
     init {
         transaction(database) {
+            addLogger(StdOutSqlLogger)
+
             SchemaUtils.create(Users)
         }
     }
