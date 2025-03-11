@@ -7,11 +7,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.runBlocking
 import org.jesperancinha.space.service.TransmissionService
-import org.jetbrains.exposed.sql.Database
-import org.koin.core.context.GlobalContext.startKoin
-import org.koin.core.context.stopKoin
-import org.koin.core.module.Module
-import org.koin.dsl.module
 import org.koin.ktor.ext.inject
 
 fun Application.configureTransmissions() {

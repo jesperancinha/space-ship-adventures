@@ -5,6 +5,8 @@ import io.ktor.server.application.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import org.jesperancinha.space.config.configureFrameworks
+import org.jesperancinha.space.route.configureDatabases
+import org.jesperancinha.space.route.configureMonitoring
 import org.jesperancinha.space.route.configureRouting
 import org.jesperancinha.space.route.configureTransmissions
 
@@ -20,7 +22,7 @@ fun Application.module() {
     configureSecurity()
     configureAdministration()
     configureFrameworks()
-//    configureMonitoring()
+    configureMonitoring()
     configureHTTP()
     configureDatabases()
     configureRouting()
