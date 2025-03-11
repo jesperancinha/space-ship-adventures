@@ -5,7 +5,7 @@ import io.ktor.server.testing.*
 import org.jesperancinha.space.configureDatabases
 import kotlin.test.Test
 
-class DatabasesKtTest {
+class DatabasesRoutingKtTest {
 
     @Test
     fun testPostCities() = testApplication {

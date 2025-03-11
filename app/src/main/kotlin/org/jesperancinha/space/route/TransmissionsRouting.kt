@@ -1,21 +1,26 @@
 package org.jesperancinha.space.route
 
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
-import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.runBlocking
-import org.jesperancinha.space.model.TransmissionRepository
+import org.jesperancinha.space.service.TransmissionService
+import org.jetbrains.exposed.sql.Database
 
 fun Application.configureTransmissions() {
-
+    val database = Database.connect(
+        url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;",
+        driver = "org.h2.Driver",
+        user = "root",
+        password = ""
+    )
+    val transmissionService = TransmissionService(database)
     routing {
         route("/transmissions") {
             get {
-                val transmissions = runBlocking { TransmissionRepository.getTransmissions() }
+                val transmissions = runBlocking { transmissionService.getTransmissions() }
                 call.respond(transmissions)
             }
 
@@ -26,7 +31,7 @@ fun Application.configureTransmissions() {
                 val message = request["message"] ?: return@post call.respond(HttpStatusCode.BadRequest, "Missing message")
 
                 val transmission = runBlocking {
-                    TransmissionRepository.sendTransmission(sender, receiver, message)
+                    transmissionService.sendTransmission(sender, receiver, message)
                 }
 
                 call.respond(transmission)

@@ -1,12 +1,13 @@
-package org.jesperancinha.space
+package org.jesperancinha.space.route
 
-import com.codahale.metrics.*
+import com.codahale.metrics.Slf4jReporter
 import io.ktor.server.application.*
 import io.ktor.server.metrics.dropwizard.*
 import io.ktor.server.metrics.micrometer.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.micrometer.prometheus.*
+import io.micrometer.prometheusmetrics.PrometheusConfig
+import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import java.util.concurrent.TimeUnit
 
 fun Application.configureMonitoring() {
