@@ -10,10 +10,7 @@ import io.ktor.server.routing.*
 import kotlinx.coroutines.runBlocking
 import org.jesperancinha.space.model.TransmissionRepository
 
-fun Application.module() {
-    install(ContentNegotiation) {
-        json()
-    }
+fun Application.configureTransmissions() {
 
     routing {
         route("/transmissions") {
