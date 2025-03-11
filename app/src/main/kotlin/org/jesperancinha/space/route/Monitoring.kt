@@ -1,4 +1,4 @@
-package org.jesperancinha.space.org.jesperancinha.space
+package org.jesperancinha.space
 
 import com.codahale.metrics.*
 import io.ktor.server.application.*

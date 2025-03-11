@@ -1,4 +1,4 @@
-package org.jesperancinha.space.org.jesperancinha.space
+package org.jesperancinha.space
 
 import io.ktor.http.*
 import io.ktor.server.application.*
