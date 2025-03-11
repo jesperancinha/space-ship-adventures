@@ -8,15 +8,16 @@ import io.ktor.server.routing.*
 import kotlinx.coroutines.runBlocking
 import org.jesperancinha.space.service.TransmissionService
 import org.jetbrains.exposed.sql.Database
+import org.koin.core.context.GlobalContext.startKoin
+import org.koin.core.context.stopKoin
+import org.koin.core.module.Module
+import org.koin.dsl.module
+import org.koin.ktor.ext.inject
 
 fun Application.configureTransmissions() {
-    val database = Database.connect(
-        url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;",
-        driver = "org.h2.Driver",
-        user = "root",
-        password = ""
-    )
-    val transmissionService = TransmissionService(database)
+
+    val transmissionService by inject<TransmissionService>()
+
     routing {
         route("/transmissions") {
             get {
@@ -27,8 +28,10 @@ fun Application.configureTransmissions() {
             post {
                 val request = call.receive<Map<String, String>>()
                 val sender = request["sender"] ?: return@post call.respond(HttpStatusCode.BadRequest, "Missing sender")
-                val receiver = request["receiver"] ?: return@post call.respond(HttpStatusCode.BadRequest, "Missing receiver")
-                val message = request["message"] ?: return@post call.respond(HttpStatusCode.BadRequest, "Missing message")
+                val receiver =
+                    request["receiver"] ?: return@post call.respond(HttpStatusCode.BadRequest, "Missing receiver")
+                val message =
+                    request["message"] ?: return@post call.respond(HttpStatusCode.BadRequest, "Missing message")
 
                 val transmission = runBlocking {
                     transmissionService.sendTransmission(sender, receiver, message)
