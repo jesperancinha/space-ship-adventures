@@ -2,12 +2,13 @@ package org.jesperancinha.space
 
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
+import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import org.jesperancinha.space.config.configureFrameworks
 import org.jesperancinha.space.route.configureTransmissions
 
 fun main(args: Array<String>) {
-    io.ktor.server.netty.EngineMain.main(args)
+    EngineMain.main(args)
 }
 
 fun Application.module() {
