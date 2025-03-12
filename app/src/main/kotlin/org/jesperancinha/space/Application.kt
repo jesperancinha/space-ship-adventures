@@ -22,7 +22,7 @@ fun Application.module() {
     configureSecurity()
     configureAdministration()
     configureFrameworks()
-    configureMonitoring()
+//    configureMonitoring()
     configureHTTP()
     configureDatabases()
     configureRouting()
