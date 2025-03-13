@@ -28,11 +28,7 @@ fun Application.configureTransmissions() {
                 val message =
                     request["message"] ?: return@post call.respond(HttpStatusCode.BadRequest, "Missing message")
 
-                val transmission = runBlocking {
-                    transmissionService.sendTransmission(sender, receiver, message)
-                }
-
-                call.respond(transmission)
+                call.respond(transmissionService.sendTransmission(sender, receiver, message))
             }
         }
     }
