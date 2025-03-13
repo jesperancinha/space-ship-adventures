@@ -16,7 +16,7 @@ fun Application.configureTransmissions() {
     routing {
         route("/transmissions") {
             get {
-                val transmissions = runBlocking { transmissionService.getTransmissions() }
+                val transmissions = transmissionService.getTransmissions()
                 call.respond(transmissions)
             }
 
