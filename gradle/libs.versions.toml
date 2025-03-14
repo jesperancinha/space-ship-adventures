@@ -8,8 +8,10 @@ ktor-version = "3.1.1"
 logback-version = "1.5.17"
 postgres-version = "42.7.5"
 prometheus-version = "1.14.5"
+arrow-stack = "2.0.1"
 
 [libraries]
+arrow-stack = { module = "io.arrow-kt:arrow-stack", version.ref = "arrow-stack" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
 ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor-version" }
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor-version" }

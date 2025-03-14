@@ -45,4 +45,9 @@ dependencies {
     implementation(libs.exposed.java.time)
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
+    implementation(platform(libs.arrow.stack))
+    implementation("io.arrow-kt:arrow-core")
+    implementation("io.arrow-kt:arrow-fx-coroutines")
+    implementation("io.arrow-kt:arrow-resilience")
+    implementation("io.arrow-kt:arrow-fx-stm")
 }
