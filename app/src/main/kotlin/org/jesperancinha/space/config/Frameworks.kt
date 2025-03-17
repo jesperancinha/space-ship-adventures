@@ -17,6 +17,7 @@ import org.jesperancinha.space.config.FleetUserService.AppError.NotFound
 import org.jesperancinha.space.config.FleetUserService.FleetUser
 import org.jesperancinha.space.service.TransmissionService
 import org.jetbrains.exposed.sql.Database
+import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
@@ -206,6 +207,9 @@ fun Application.configureFrameworks() {
                     println(environment.log.info("Hello, World!"))
                 }
             }
+            single<HelloServiceImpl>{
+                HelloServiceImpl()
+            } bind AnotherHelloService::class
             val database = Database.connect(
                 url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;",
                 driver = "org.h2.Driver",
