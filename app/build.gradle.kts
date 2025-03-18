@@ -18,7 +18,7 @@ application {
 repositories {
     mavenCentral()
 }
-
+val kotestVersion = "5.6.0"
 dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.server.content.negotiation)
@@ -50,4 +50,18 @@ dependencies {
     implementation("io.arrow-kt:arrow-fx-coroutines")
     implementation("io.arrow-kt:arrow-resilience")
     implementation("io.arrow-kt:arrow-fx-stm")
+    testImplementation("io.insert-koin:koin-test:4.0.2")
+    testImplementation(platform("org.junit:junit-bom:5.12.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.junit.platform:junit-platform-engine")
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("io.kotest:kotest-property:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-json:$kotestVersion")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

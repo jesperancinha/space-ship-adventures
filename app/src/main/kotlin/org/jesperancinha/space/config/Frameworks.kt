@@ -10,7 +10,7 @@ import arrow.resilience.Schedule
 import arrow.resilience.saga
 import arrow.resilience.transact
 import io.ktor.server.application.*
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.serialization.Serializable
 import org.jesperancinha.space.config.FleetUserService.AppError.DatabaseError
 import org.jesperancinha.space.config.FleetUserService.AppError.NotFound
@@ -223,6 +223,11 @@ fun Application.configureFrameworks() {
             }
             single<STMService> {
                 STMService()
+            }
+            val dockingService = DockingService()
+            CoroutineScope(Dispatchers.IO).launch { dockingService.initialize() }
+            single<DockingService> {
+                dockingService
             }
         })
     }
