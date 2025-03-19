@@ -1,4 +1,4 @@
-package org.jesperancinha.space.service
+package org.jesperancinha.space.dao
 
 import kotlinx.coroutines.*
 import kotlinx.serialization.Serializable

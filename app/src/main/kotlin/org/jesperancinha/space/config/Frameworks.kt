@@ -15,7 +15,11 @@ import kotlinx.serialization.Serializable
 import org.jesperancinha.space.config.FleetUserService.AppError.DatabaseError
 import org.jesperancinha.space.config.FleetUserService.AppError.NotFound
 import org.jesperancinha.space.config.FleetUserService.FleetUser
-import org.jesperancinha.space.service.TransmissionService
+import org.jesperancinha.space.dao.TransmissionService
+import org.jesperancinha.space.service.AnotherHelloService
+import org.jesperancinha.space.service.DockingService
+import org.jesperancinha.space.service.HelloService
+import org.jesperancinha.space.service.HelloServiceImpl
 import org.jetbrains.exposed.sql.Database
 import org.koin.dsl.bind
 import org.koin.dsl.module

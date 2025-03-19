@@ -7,7 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sse.*
 import io.ktor.sse.*
-import org.jesperancinha.space.config.HelloService
+import org.jesperancinha.space.service.HelloService
 import org.koin.ktor.ext.inject
 
 fun Application.configureRouting() {

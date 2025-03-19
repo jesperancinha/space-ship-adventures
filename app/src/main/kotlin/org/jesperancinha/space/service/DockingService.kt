@@ -1,4 +1,4 @@
-package org.jesperancinha.space.config
+package org.jesperancinha.space.service
 
 import arrow.fx.stm.TVar
 import arrow.fx.stm.atomically

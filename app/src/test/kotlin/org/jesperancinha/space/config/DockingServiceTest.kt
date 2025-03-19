@@ -8,6 +8,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jesperancinha.space.module
+import org.jesperancinha.space.service.DockingService
+import org.jesperancinha.space.service.FuelStation
 import org.junit.jupiter.api.Test
 import org.koin.test.KoinTest
 import org.koin.test.inject
@@ -18,7 +20,7 @@ class DockingServiceTest : KoinTest {
     @Test
     fun `should succeed in requesting docking`() = testApplication {
         application {
-            module();
+            module()
         }
         startApplication()
         CoroutineScope(Dispatchers.IO)

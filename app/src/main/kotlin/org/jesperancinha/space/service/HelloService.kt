@@ -1,9 +1,9 @@
-package org.jesperancinha.space.config
+package org.jesperancinha.space.service
 
 fun interface HelloService {
     fun sayHello()
 }
-fun interface AnotherHelloService : HelloService{
+fun interface AnotherHelloService : HelloService {
     override fun sayHello()
 }
 
