@@ -43,7 +43,7 @@ class DockingService {
     suspend fun refuelWithRollback(spaceship: String, requestedFuel: Int) {
         try {
             atomically {
-                print("----- Start of atomic transaction")
+                print("----- Start of atomic transaction\n")
                 val station = fuelStation.read()
                 if (station.fuel >= requestedFuel) {
                     println("$spaceship attempting to refuel with $requestedFuel units...")
