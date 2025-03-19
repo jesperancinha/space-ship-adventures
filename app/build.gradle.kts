@@ -18,7 +18,7 @@ application {
 repositories {
     mavenCentral()
 }
-val kotestVersion = "5.6.0"
+val kotestVersion = "5.9.1"
 dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.server.content.negotiation)
@@ -51,7 +51,7 @@ dependencies {
     implementation("io.arrow-kt:arrow-resilience")
     implementation("io.arrow-kt:arrow-fx-stm")
     testImplementation("io.insert-koin:koin-test:4.0.2")
-    testImplementation(platform("org.junit:junit-bom:5.12.0"))
+    testImplementation(platform("org.junit:junit-bom:5.12.1"))
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.junit.jupiter:junit-jupiter-engine")
     testImplementation("org.junit.platform:junit-platform-launcher")
