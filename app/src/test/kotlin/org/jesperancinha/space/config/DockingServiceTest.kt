@@ -18,7 +18,7 @@ class DockingServiceTest : KoinTest {
     @Test
     fun `should succeed in requesting docking`() = testApplication {
         application {
-            module()
+            module();
         }
         startApplication()
         CoroutineScope(Dispatchers.IO)
