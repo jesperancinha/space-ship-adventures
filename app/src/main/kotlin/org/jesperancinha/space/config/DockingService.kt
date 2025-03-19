@@ -2,7 +2,6 @@ package org.jesperancinha.space.config
 
 import arrow.fx.stm.TVar
 import arrow.fx.stm.atomically
-import kotlin.random.Random.Default.nextBoolean
 
 data class DockingBay(var occupied: Boolean = false)
 data class FuelStation(var fuel: Int)
@@ -48,9 +47,9 @@ class DockingService {
                 if (station.fuel >= requestedFuel) {
                     println("$spaceship attempting to refuel with $requestedFuel units...")
                     fuelStation.write(FuelStation(station.fuel - requestedFuel))
-//                    if (nextBoolean()) {
-//                        throw IllegalStateException("$spaceship encountered a system failure!")
-//                    }
+                    if (requestedFuel == 20) {
+                        throw IllegalStateException("$spaceship encountered a system failure!")
+                    }
                     println("$spaceship successfully refueled! Remaining fuel: ${station.fuel - requestedFuel}")
                 } else {
                     println("$spaceship cannot refuel, not enough fuel available!")

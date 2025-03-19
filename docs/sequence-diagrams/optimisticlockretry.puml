@@ -1,0 +1,21 @@
+@startuml
+
+participant "Tx A" as A
+participant "Tx B" as B
+participant "Database" as DB
+
+A -> DB: Read Data (Version 1)
+B -> DB: Read Data (Version 1)
+A -> A: Modify Data (locally)
+B -> B: Modify Data (locally)
+A -> DB: Commit Data (Version 2)
+DB -> A: Commit Successful
+B -> DB: Commit Data (Version 1)
+DB -> B: Conflict Detected!
+B -> B: Abort & Retry Transaction
+B -> DB: Read Data (Version 2)
+B -> B: Modify Data (locally)
+B -> DB: Commit Data (Version 3)
+DB -> B: Commit Successful
+
+@enduml
