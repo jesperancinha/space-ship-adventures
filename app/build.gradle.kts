@@ -18,7 +18,7 @@ application {
 repositories {
     mavenCentral()
 }
-val kotestVersion = "5.6.0"
+val kotestVersion = "5.9.1"
 dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.server.content.negotiation)
