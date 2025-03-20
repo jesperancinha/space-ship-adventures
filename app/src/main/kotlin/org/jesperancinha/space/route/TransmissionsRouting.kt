@@ -5,6 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.websocket.*
 import org.jesperancinha.space.dao.TransmissionService
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.scope
@@ -16,6 +17,12 @@ fun Application.configureTransmissions() {
     routing {
 
         route("/transmissions") {
+
+            webSocket("/socket") {
+                val transmissionService2 = call.scope.getOrNull<TransmissionService>()
+                println(transmissionService2?.getTransmissions())
+            }
+
             get {
                 val transmissionService2 = call.scope.getOrNull<TransmissionService>()
                 val transmissions = transmissionService.getTransmissions()
