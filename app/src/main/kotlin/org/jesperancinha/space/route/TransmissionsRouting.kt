@@ -7,15 +7,19 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jesperancinha.space.dao.TransmissionService
 import org.koin.ktor.ext.inject
+import org.koin.ktor.plugin.scope
 
 fun Application.configureTransmissions() {
 
     val transmissionService by inject<TransmissionService>()
 
     routing {
+
         route("/transmissions") {
             get {
+                val transmissionService2 = call.scope.getOrNull<TransmissionService>()
                 val transmissions = transmissionService.getTransmissions()
+                println(transmissionService2?.getTransmissions())
                 call.respond(transmissions)
             }
 

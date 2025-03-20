@@ -26,6 +26,7 @@ ktor-server-openapi = { module = "io.ktor:ktor-server-openapi", version.ref = "k
 ktor-server-sse = { module = "io.ktor:ktor-server-sse", version.ref = "ktor-version" }
 ktor-server-host-common = { module = "io.ktor:ktor-server-host-common", version.ref = "ktor-version" }
 ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor-version" }
+ktor-server-websockets = { module = "io.ktor:ktor-server-websockets", version.ref = "ktor-version" }
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgres-version" }
 h2 = { module = "com.h2database:h2", version.ref = "h2-version" }
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed-version" }
