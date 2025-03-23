@@ -2,6 +2,7 @@ package org.jesperancinha.space.service
 
 import arrow.fx.stm.TVar
 import arrow.fx.stm.atomically
+import arrow.fx.stm.stm
 
 data class DockingBay(var occupied: Boolean = false)
 data class FuelStation(var fuel: Int)
@@ -30,14 +31,16 @@ class DockingService {
 
     suspend fun refuel(spaceship: String, requestedFuel: Int) {
         atomically {
-            val station = fuelStation.read()
-            if (station.fuel >= requestedFuel) {
-                println("$spaceship is refueling with $requestedFuel units...")
-                fuelStation.write(FuelStation(station.fuel - requestedFuel))
-                println("$spaceship successfully refueled! Remaining fuel: ${station.fuel - requestedFuel}")
-            } else {
-                println("$spaceship cannot refuel, not enough fuel available!")
-            }
+            stm {
+                val station = fuelStation.read()
+                if (station.fuel >= requestedFuel) {
+                    println("$spaceship is refueling with $requestedFuel units...")
+                    fuelStation.write(FuelStation(station.fuel - requestedFuel))
+                    println("$spaceship successfully refueled! Remaining fuel: ${station.fuel - requestedFuel}")
+                } else {
+                    println("$spaceship cannot refuel, not enough fuel available!")
+                }
+            } orElse {}
         }
     }
     suspend fun refuelWithRollback(spaceship: String, requestedFuel: Int) {
