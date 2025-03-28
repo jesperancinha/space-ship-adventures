@@ -5,6 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.websocket.*
+import org.jesperancinha.space.config.configureAdministration
 import org.jesperancinha.space.config.configureFrameworks
 import org.jesperancinha.space.route.*
 
