@@ -22,3 +22,10 @@ The shared build logic was extracted to a convention plugin located in `buildSrc
 
 This project uses a version catalog (see `gradle/libs.versions.toml`) to declare and version dependencies
 and both a build cache and a configuration cache (see `gradle.properties`).
+
+## References
+
+- https://www.kodeco.com/11593767-functional-programming-with-kotlin-and-arrow-algebraic-data-types
+- https://old.arrow-kt.io/docs/0.12/patterns/error_handling/
+- https://rockthejvm.com/articles/functional-error-handling-in-kotlin-part-2-result-and-either?utm_source=chatgpt.com
+- https://www.codemotion.com/magazine/frontend/mobile-dev/discover-arrow-functional-programming-in-kotlin-and-more/
