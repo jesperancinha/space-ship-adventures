@@ -1,8 +1,6 @@
 package org.jesperancinha.space.service
 
 import arrow.core.*
-import io.micrometer.core.instrument.config.validate.InvalidReason
-import io.micrometer.core.instrument.config.validate.Validated
 
 sealed interface Transmission
 
@@ -40,21 +38,11 @@ class MessageService {
             else -> UnknownFormat.left()
         }
 
+    data class TransmissionData(val sender: String, val message: String)
 
-
-    fun validateTransmission(data: TransmissionData) =
-        when {
-            data.sender.isBlank() && data.message.isBlank() ->
-            {
-                Validated.Invalid<TransmissionData>("sender", data, "Sender is blank and message is blank", InvalidReason.MISSING, null)
-                Validated.Invalid("message",data, "Sender is blank and message is blank", InvalidReason.MISSING,null)
-            }
-               data.sender.isBlank() ->
-                   Validated.Invalid("sender", data, "Sender is blank and message is blank", InvalidReason.MISSING, null)
-            data.message.isBlank() ->
-                Validated.Invalid("message",data, "Sender is blank and message is blank", InvalidReason.MISSING,null)
-            else -> Validated.Valid("data",data)
-        }
+    sealed interface ValidationError
+    data object EmptySender : ValidationError
+    data object EmptyMessage : ValidationError
 
     fun processTransmission(rawData: String): Either<String, String> =
         parseTransmission(rawData)
