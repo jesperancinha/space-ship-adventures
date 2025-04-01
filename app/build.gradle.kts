@@ -51,7 +51,7 @@ dependencies {
     implementation("io.arrow-kt:arrow-fx-coroutines")
     implementation("io.arrow-kt:arrow-resilience")
     implementation("io.arrow-kt:arrow-fx-stm")
-    testImplementation("io.insert-koin:koin-test:4.0.3")
+    testImplementation("io.insert-koin:koin-test:4.0.4")
     testImplementation(platform("org.junit:junit-bom:5.12.1"))
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.junit.jupiter:junit-jupiter-engine")
