@@ -78,3 +78,19 @@ fun Application.configureSTMRouting() {
         }
     }
 }
+
+fun Application.configureSpaceRouting() {
+    routing {
+        get("/users") {
+            call.respond(HttpStatusCode.OK, "ok")
+        }
+        get("/message") {
+            call.respond(HttpStatusCode.OK, "ok")
+        }
+        put("/transmission") {
+            call.respond(HttpStatusCode.OK, "ok")
+
+        }
+    }
+
+}

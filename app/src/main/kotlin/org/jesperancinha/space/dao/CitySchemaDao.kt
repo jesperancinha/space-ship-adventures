@@ -5,8 +5,6 @@ import kotlinx.serialization.Serializable
 import java.sql.Connection
 import java.sql.Statement
 
-@Serializable
-data class City(val name: String, val population: Int)
 
 class CityService(private val connection: Connection) {
     companion object {

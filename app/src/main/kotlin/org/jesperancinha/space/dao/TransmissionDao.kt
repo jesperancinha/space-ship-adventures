@@ -1,12 +1,12 @@
 package org.jesperancinha.space.dao
 
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import org.jesperancinha.space.dto.TransmissionDto
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -34,18 +34,7 @@ class TransmissionService(database: Database) {
 
     }
 
-    @Serializable
-    data class TransmissionDTO(
-        val id: Int,
-        val sender: String,
-        val receiver: String,
-        val message: String,
-        @Serializable(with = LocalDateTimeSerializer::class)
-        val timestamp: LocalDateTime
-    )
-
-
-    suspend fun sendTransmission(sender: String, receiver: String, message: String): TransmissionDTO =
+    suspend fun sendTransmission(sender: String, receiver: String, message: String): TransmissionDto =
         newSuspendedTransaction {
             val id = Transmissions.insertAndGetId {
                 it[Transmissions.sender] = sender
@@ -53,13 +42,13 @@ class TransmissionService(database: Database) {
                 it[Transmissions.message] = message
             }.value
 
-            return@newSuspendedTransaction TransmissionDTO(id, sender, receiver, message, LocalDateTime.now())
+            return@newSuspendedTransaction TransmissionDto(id, sender, receiver, message, LocalDateTime.now())
         }
 
-    suspend fun getTransmissions(): List<TransmissionDTO> =
+    suspend fun getTransmissions(): List<TransmissionDto> =
         newSuspendedTransaction {
             Transmissions.selectAll().map {
-                TransmissionDTO(
+                TransmissionDto(
                     it[Transmissions.id].value,
                     it[Transmissions.sender],
                     it[Transmissions.receiver],

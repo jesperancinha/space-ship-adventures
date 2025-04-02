@@ -1,6 +1,10 @@
 package org.jesperancinha.space.service
 
 import arrow.core.*
+import arrow.core.raise.either
+import arrow.core.raise.ensure
+import arrow.core.raise.nullable
+import jdk.internal.misc.Signal.raise
 
 sealed interface Transmission
 
@@ -16,6 +20,13 @@ data class TransmissionData(val sender: String, val message: String)
 sealed interface ValidationError
 data object EmptySender : ValidationError
 data object EmptyMessage : ValidationError
+fun f(n: Int): Either<Error, String>  = either {
+    raise(Error())
+}
+fun g(s: String): Either<Error, String> = either {
+    raise(Error())
+}
+fun String.summarize(): String = "$this--01"
 
 class MessageService {
 
@@ -48,4 +59,13 @@ class MessageService {
         parseTransmission(rawData)
             .map { "Processed: $it" }
             .mapLeft { "Error: $it" }
+
+
+
+    fun fooThatRaises(n: Int): Either<Error, String> = either {
+        ensure(n >= 0) { Error() }
+        val s = f(n).bind()
+        val t = g(s).bind()
+        t.summarize()
+    }
 }
