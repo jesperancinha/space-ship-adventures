@@ -26,7 +26,7 @@ fun g(s: String): Either<Error, String> = either {
 }
 fun String.summarize(): String = "$this--01"
 
-class MessageService {
+class DistressSignalMessageService {
 
     fun decodeTransmission(rawData: String): Option<Transmission> =
         when {
