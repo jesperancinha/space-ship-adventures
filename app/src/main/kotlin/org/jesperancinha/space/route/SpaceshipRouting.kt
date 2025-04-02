@@ -104,7 +104,7 @@ fun Application.configureSpaceRouting() {
     val messageService = MessageService()
     val transmissionService = TransmissionService(messageService)
     val messagesLens = TransmissionNgDto.messagePackage.messages
-
+val messagePackageLens = TransmissionNgDto.messagePackage
 
     routing {
         get("/users") {
@@ -118,6 +118,10 @@ fun Application.configureSpaceRouting() {
             post ("/messages") {
                 val transmission = call.receive<TransmissionNgDto>()
                 call.respond(HttpStatusCode.OK, messagesLens.get(transmission))
+            }
+            post ("/package") {
+                val transmission = call.receive<TransmissionNgDto>()
+                call.respond(HttpStatusCode.OK, messagePackageLens.get(transmission))
             }
         }
         route("/messages") {
