@@ -64,9 +64,9 @@ fun Application.configureSpecialRouting() {
 
         put("/users/{id}/register") {
             val id = call.parameters["id"]?.toIntOrNull()
-            id?.let {
+            nullable {
                 val request = call.receive<FleetUser>()
-                val registerUserById = userService.registerUserById(id, request)
+                val registerUserById = userService.registerUserById(id.bind(), request)
                 registerUserById.fold(
                     ifLeft = { call.respond(HttpStatusCode.InternalServerError, "Update not possible!") },
                     ifRight = { _ -> call.respond("Successfully registered user with id = $id") }

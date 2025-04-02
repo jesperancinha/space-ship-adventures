@@ -4,13 +4,17 @@ import arrow.core.Either
 import arrow.core.raise.Raise
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import arrow.core.raise.nullable
 import arrow.fx.stm.TVar
 import arrow.fx.stm.atomically
 import arrow.resilience.Schedule
 import arrow.resilience.saga
 import arrow.resilience.transact
 import io.ktor.server.application.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.jesperancinha.space.config.FleetUserService.AppError.DatabaseError
 import org.jesperancinha.space.config.FleetUserService.AppError.NotFound
@@ -113,15 +117,18 @@ class FleetUserService {
                     println("User with $id has clearance to proceed with telephone ${request.telephone}")
                     updateUser(user.copy(telephone = request.telephone))
                 }) {
-                    updateUser(originalUser)
+                    nullable {
+                        updateUser(originalUser.bind())
+                    }
                 }
                 saga({
                     val user = extracted(id, true)!!
                     println("User with $id has clearance to proceed with bank account ${request.bankAccountNumber}")
                     updateUser(user.copy(bankAccountNumber = request.bankAccountNumber))
                 }) {
-                    updateUser(originalUser)
-                }
+                    nullable {
+                        updateUser(originalUser.bind())
+                    }                }
                 saga({
                     val user = extracted(id, true)!!
                     println("User with $id has clearance to proceed with department ${request.department} and chamber ${user.chamber}")
@@ -133,7 +140,9 @@ class FleetUserService {
                     )
 
                 }) {
-                    updateUser(originalUser)
+                    nullable {
+                        updateUser(originalUser.bind())
+                    }
                 }
             }.transact()
         }
