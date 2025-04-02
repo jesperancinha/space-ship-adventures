@@ -73,9 +73,9 @@ class MessageService {
 
 class TransmissionService(private val messageService: MessageService) {
 
-    suspend fun createTransmission(transmission: TransmissionNgDto): TransmissionNgDtoEntity? {
+    suspend fun createTransmission(transmission: TransmissionNgDto): TransmissionNgDto {
         val messagePackage = transmission.messagePackage
-        val messageIds = messagePackage.messages.map { message ->
+        messagePackage.messages.map { message ->
             messageService.createMessage(message).id!!
         }
 
@@ -94,12 +94,12 @@ class TransmissionService(private val messageService: MessageService) {
                     it[timestamp] = transmission.timestamp
                 }
 
-                TransmissionNgDtoEntity(
+                TransmissionNgDto(
                     transmissionId.value,
                     transmission.sender,
                     transmission.receiver,
                     transmission.extraInfo,
-                    messagePackageId.value,
+                    transmission.messagePackage,
                     transmission.timestamp
                 )
             }

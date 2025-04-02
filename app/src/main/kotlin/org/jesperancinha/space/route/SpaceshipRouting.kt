@@ -8,8 +8,15 @@ import io.ktor.server.routing.*
 import org.jesperancinha.space.config.FleetUserService
 import org.jesperancinha.space.config.FleetUserService.FleetUser
 import org.jesperancinha.space.config.STMService
+import org.jesperancinha.space.dao.MessagePackages
+import org.jesperancinha.space.dao.Messages
+import org.jesperancinha.space.dao.Transmissions
 import org.jesperancinha.space.dto.TransmissionNgDto
-import org.jesperancinha.space.service.Transmission
+import org.jesperancinha.space.service.MessageService
+import org.jesperancinha.space.service.TransmissionService
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.ktor.ext.inject
 
 fun Application.configureSpecialRouting() {
@@ -82,6 +89,19 @@ fun Application.configureSTMRouting() {
 }
 
 fun Application.configureSpaceRouting() {
+
+    Database.connect(
+        url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1",
+        user = "root",
+        driver = "org.h2.Driver",
+        password = "",
+    )
+    transaction { SchemaUtils.create(Messages, MessagePackages, Transmissions) }
+
+    val messageService = MessageService()
+    val transmissionService = TransmissionService(messageService)
+
+
     routing {
         get("/users") {
             call.respond(HttpStatusCode.OK, "ok")
@@ -89,10 +109,17 @@ fun Application.configureSpaceRouting() {
         get("/message") {
             call.respond(HttpStatusCode.OK, "ok")
         }
-        post("/transmission") {
-            val request = call.receive<TransmissionNgDto>()
-            println(request)
-            call.respond(HttpStatusCode.OK, "ok")
+        route("/transmissions") {
+            get {
+                val transmissions = transmissionService.getTransmissions()
+                call.respond(transmissions)
+            }
+
+            post {
+                val transmission = call.receive<TransmissionNgDto>()
+                val createdTransmission = transmissionService.createTransmission(transmission)
+                call.respond(HttpStatusCode.Created, createdTransmission)
+            }
         }
     }
 }

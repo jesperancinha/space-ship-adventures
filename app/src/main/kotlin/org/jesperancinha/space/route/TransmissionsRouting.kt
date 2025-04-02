@@ -16,7 +16,7 @@ fun Application.configureTransmissions() {
 
     routing {
 
-        route("/transmissions") {
+        route("/transmissions/old") {
 
             webSocket("/socket") {
                 val transmissionService2 = call.scope.getOrNull<TransmissionService>()

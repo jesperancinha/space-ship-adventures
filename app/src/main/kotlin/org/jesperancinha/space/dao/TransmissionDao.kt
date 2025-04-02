@@ -1,7 +1,6 @@
 package org.jesperancinha.space.dao
 
 import arrow.core.NonEmptyList
-import arrow.core.nonEmptyListOf
 import arrow.core.toNonEmptyListOrNull
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
@@ -24,7 +23,7 @@ import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
 
 
 class TransmissionService(database: Database) {
-    object Transmissions : IntIdTable() {
+    object TransmissionsOld : IntIdTable() {
         val sender = varchar("sender", 50)
         val receiver = varchar("receiver", 50)
         val message = text("message")
@@ -33,17 +32,17 @@ class TransmissionService(database: Database) {
 
     init {
         transaction(database) {
-            SchemaUtils.create(Transmissions)
+            SchemaUtils.create(TransmissionsOld)
         }
 
     }
 
     suspend fun sendTransmission(sender: String, receiver: String, message: String): TransmissionDto =
         newSuspendedTransaction {
-            val id = Transmissions.insertAndGetId {
-                it[Transmissions.sender] = sender
-                it[Transmissions.receiver] = receiver
-                it[Transmissions.message] = message
+            val id = TransmissionsOld.insertAndGetId {
+                it[TransmissionsOld.sender] = sender
+                it[TransmissionsOld.receiver] = receiver
+                it[TransmissionsOld.message] = message
             }.value
 
             return@newSuspendedTransaction TransmissionDto(id, sender, receiver, message, LocalDateTime.now())
@@ -51,13 +50,13 @@ class TransmissionService(database: Database) {
 
     suspend fun getTransmissions(): List<TransmissionDto> =
         newSuspendedTransaction {
-            Transmissions.selectAll().map {
+            TransmissionsOld.selectAll().map {
                 TransmissionDto(
-                    it[Transmissions.id].value,
-                    it[Transmissions.sender],
-                    it[Transmissions.receiver],
-                    it[Transmissions.message],
-                    it[Transmissions.timestamp]
+                    it[TransmissionsOld.id].value,
+                    it[TransmissionsOld.sender],
+                    it[TransmissionsOld.receiver],
+                    it[TransmissionsOld.message],
+                    it[TransmissionsOld.timestamp]
                 )
             }
         }
