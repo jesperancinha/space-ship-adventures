@@ -1,0 +1,153 @@
+###
+GET http://localhost:8080/users/1
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Joao",
+  "age": 120
+}
+
+
+###
+GET http://localhost:8080/transmissions
+
+###
+POST http://localhost:8080/transmissions
+Content-Type: application/json
+
+{
+  "sender": "Spaceship A",
+  "receiver": "Spaceship B",
+  "message": "Hello from A!"
+}
+
+###
+
+###
+GET http://localhost:8080/log
+
+###
+GET http://localhost:8080/
+
+###
+GET http://localhost:8080/hello
+
+###
+POST http://localhost:8080/transmissions
+Content-Type: application/json
+
+{
+  "sender": "You",
+  "receiver": "Me",
+  "extraInfo": "",
+  "messagePackage": {
+    "messages": [
+      {
+        "purpose": "purpose",
+        "message": "message"
+      }
+    ]
+  }
+}
+
+###
+GET http://localhost:8080/transmissions
+
+###
+GET http://localhost:8080/messages
+Content-Type: application/json
+
+{
+  "id": 0,
+  "purpose": "",
+  "message": ""
+}
+
+###
+POST http://localhost:8080/messages
+Content-Type: application/json
+
+{
+  "purpose": "wow",
+  "message": "waaa"
+}
+
+###
+POST http://localhost:8080/pieces/messages
+Content-Type: application/json
+
+{
+  "id": 0,
+  "sender": "You",
+  "receiver": "Me",
+  "extraInfo": "",
+  "messagePackage": {
+    "messages": [
+      {
+        "purpose": "purpose",
+        "message": "message"
+      }
+    ]
+  }
+}
+
+
+###
+POST http://localhost:8080/pieces/package
+Content-Type: application/json
+
+{
+  "id": 0,
+  "sender": "You",
+  "receiver": "Me",
+  "extraInfo": "",
+  "messagePackage": {
+    "messages": [
+      {
+        "purpose": "purpose",
+        "message": "message"
+      }
+    ]
+  }
+}
+
+###
+POST http://localhost:8080/pieces/retransmissions
+Content-Type: application/json
+
+{
+  "id": 0,
+  "sender": "You",
+  "receiver": "Me",
+  "extraInfo": "",
+  "messagePackage": {
+    "messages": [
+      {
+        "purpose": "purpose",
+        "message": "message",
+        "messageCC": "message",
+        "messageBcc": "message"
+      },
+      {
+        "purpose": "purpose2",
+        "message": "message2"
+      },
+      {
+        "purpose": "purpose",
+        "message": "message",
+        "messageCC": "message3",
+        "messageBcc": "message3"
+      }
+    ]
+  }
+}
+
+###
+GET http://localhost:8080/transmissions/full
+
+###
+GET http://localhost:8080/messages/purposes

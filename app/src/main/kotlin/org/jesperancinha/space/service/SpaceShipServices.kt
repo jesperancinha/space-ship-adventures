@@ -1,11 +1,18 @@
 package org.jesperancinha.space.service
 
 import arrow.core.Either
+import arrow.core.NonEmptyList
 import arrow.core.raise.either
+import arrow.core.raise.nullable
+import arrow.core.toNonEmptyListOrNone
+import arrow.core.toNonEmptyListOrNull
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.jesperancinha.space.dao.*
 import org.jesperancinha.space.dto.Message
+import org.jesperancinha.space.dto.MessagePackage
 import org.jesperancinha.space.dto.TransmissionNgDto
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
@@ -13,9 +20,10 @@ import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
+import java.time.LocalDateTime
 
 class MessageService {
-    suspend fun createMessage(message: Message): Message {
+    suspend fun createMessage(message: Message, packageIdValue: Int): Message {
         message.getInitials()
         return withContext(Dispatchers.IO) {
             transaction {
@@ -23,8 +31,9 @@ class MessageService {
                     .insertAndGetId {
                         it[purpose] = message.purpose
                         it[Messages.message] = message.message
+                        it[packageId] = packageIdValue
                     }
-                Message(messageId.value, message.purpose, message.message)
+                Message(messageId.value, message.purpose, message.message, packageId = message.packageId)
             }
         }
     }
@@ -33,7 +42,7 @@ class MessageService {
         return withContext(Dispatchers.IO) {
             transaction {
                 Messages.selectAll().map {
-                    Message(it[Messages.id].value, it[Messages.purpose], it[Messages.message])
+                    Message(it[Messages.id].value, it[Messages.purpose], it[Messages.message], packageId = it[Messages.packageId].value)
                 }
             }
         }
@@ -45,6 +54,29 @@ class MessageService {
                 Messages.selectAll().where { Messages.id eq id }.map {
                     MessageEntity(it[Messages.id].value, it[Messages.purpose], it[Messages.message])
                 }.singleOrNull()
+            }
+        }
+    }
+
+    suspend fun getMessagesByPackageId(id: Int): NonEmptyList<Message> {
+        return withContext(Dispatchers.IO) {
+            transaction {
+                Messages.selectAll().where { Messages.packageId eq id }.map {
+                    Message(it[Messages.id].value, it[Messages.purpose], it[Messages.message], packageId = it[Messages.packageId].value)
+                }.toNonEmptyListOrNull() ?: error("List was unexpectedly empty!")
+            }
+        }
+    }
+
+    suspend fun getMessagePackageById(id: Int): MessagePackage {
+        return withContext(Dispatchers.IO) {
+            transaction {
+                MessagePackages.selectAll().where { MessagePackages.id eq id }.map {
+                    MessagePackage(
+                        messages =
+                        runBlocking { getMessagesByPackageId(id) }, timestamp = it[MessagePackages.timestamp]
+                    )
+                }.single()
             }
         }
     }
@@ -81,17 +113,19 @@ class TransmissionService(private val messageService: MessageService) {
                 raise(it)
             })
             {
-                val messagePackage = transmission.messagePackage
-                messagePackage.messages.map { message ->
-                    messageService.createMessage(message).id!!
-                }
 
                 withContext(Dispatchers.IO) {
-                    transaction {
-                        val messagePackageId = MessagePackages
+                   val messagePackageId = transaction {
+                        MessagePackages
                             .insertAndGetId {
-                                it[timestamp] = messagePackage.timestamp
+                                it[timestamp] = LocalDateTime.now()
                             }
+                    }
+                    transaction {
+                        val messagePackage = transmission.messagePackage
+                        messagePackage.messages.map { message ->
+                            runBlocking { messageService.createMessage(message, messagePackageId.value).id }
+                        }
 
                         val transmissionId = Transmissions.insertAndGetId {
                             it[sender] = transmission.sender
@@ -138,6 +172,26 @@ class TransmissionService(private val messageService: MessageService) {
             transaction {
                 Transmissions.selectAll()
                     .where { Transmissions.id eq id }
+                    .map {
+                        val messagePackageId = it[Transmissions.messagePackage]
+                        TransmissionNgDtoEntity(
+                            it[Transmissions.id].value,
+                            it[Transmissions.sender],
+                            it[Transmissions.receiver],
+                            it[Transmissions.extraInfo],
+                            messagePackageId.value,
+                            it[Transmissions.timestamp]
+                        )
+                    }.singleOrNull()
+            }
+        }
+    }
+
+    suspend fun getTransmissionByPackageId(id: Int): TransmissionNgDtoEntity? {
+        return withContext(Dispatchers.IO) {
+            transaction {
+                Transmissions.selectAll()
+                    .where { Transmissions.messagePackage eq id }
                     .map {
                         val messagePackageId = it[Transmissions.messagePackage]
                         TransmissionNgDtoEntity(

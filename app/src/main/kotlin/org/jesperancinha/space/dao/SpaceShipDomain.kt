@@ -8,6 +8,7 @@ import java.time.LocalDateTime
 object Messages : IntIdTable() {
     val purpose = varchar("purpose", 255)
     val message = varchar("message", 255)
+    val packageId = reference("messagePackage", MessagePackages)
 }
 
 object MessagePackages : IntIdTable() {

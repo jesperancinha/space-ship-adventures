@@ -2,7 +2,7 @@
 
 participant "Tx A" as A
 participant "Tx B" as B
-participant "Database" as DB
+participant "Memory" as DB
 
 A -> DB: Read Data (Version 1)
 B -> DB: Read Data (Version 1)

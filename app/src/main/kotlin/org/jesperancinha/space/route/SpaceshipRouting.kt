@@ -1,6 +1,8 @@
 package org.jesperancinha.space.route
 
 import arrow.core.raise.nullable
+import arrow.fx.coroutines.parMap
+import arrow.fx.coroutines.parZip
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -12,17 +14,13 @@ import org.jesperancinha.space.config.STMService
 import org.jesperancinha.space.dao.MessagePackages
 import org.jesperancinha.space.dao.Messages
 import org.jesperancinha.space.dao.Transmissions
-import org.jesperancinha.space.dto.Message
-import org.jesperancinha.space.dto.TransmissionNgDto
-import org.jesperancinha.space.dto.messagePackage
-import org.jesperancinha.space.dto.messages
+import org.jesperancinha.space.dto.*
 import org.jesperancinha.space.service.MessageService
 import org.jesperancinha.space.service.TransmissionService
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.ktor.ext.inject
-import org.koin.logger.slf4jLogger
 
 fun Application.configureSpecialRouting() {
 
@@ -136,16 +134,42 @@ fun Application.configureSpaceRouting() {
                 val messages = messageService.getMessages()
                 call.respond(messages)
             }
-
-            post {
-                val message = call.receive<Message>()
-                val createdMessage = messageService.createMessage(message)
-                call.respond(HttpStatusCode.Created, createdMessage)
+            get("/purposes") {
+                val messages = messageService.getMessages()
+                val senderMessageDetails = messages.map {
+                    nullable {
+                        parZip({
+                            transmissionService.getTransmissionByPackageId(it.packageId.bind()).bind().sender
+                        }, {
+                            messageService.getMessagePackageById(it.packageId.bind()).timestamp
+                        }) { sender, timestamp ->
+                            SenderMessageDetail(sender, timestamp)
+                        }
+                    }
+                }
+                call.respond(senderMessageDetails)
             }
+
         }
         route("/transmissions") {
             get {
                 val transmissions = transmissionService.getTransmissions()
+                call.respond(transmissions)
+            }
+
+            get("/full") {
+                val transmissions = transmissionService.getTransmissions()
+                    .map {
+                        val messageEntities = messageService.getMessagesByPackageId(it.messagePackageId)
+                        TransmissionNgDto(
+                            id = it.id,
+                            sender = it.sender,
+                            receiver = it.receiver,
+                            extraInfo = it.extraInfo,
+                            messagePackage = messageService.getMessagePackageById(it.messagePackageId),
+                            timestamp = it.timestamp
+                        )
+                    }
                 call.respond(transmissions)
             }
 

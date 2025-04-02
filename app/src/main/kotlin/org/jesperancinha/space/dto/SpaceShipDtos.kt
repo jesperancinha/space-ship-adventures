@@ -18,8 +18,9 @@ data class Message(
     val id: Int? = null,
     val purpose: String,
     val message: String,
-    val messageBcc:String? = null,
-    val messageCC: String? = null
+    val messageBcc: String? = null,
+    val messageCC: String? = null,
+    val packageId: Int? = null,
 ) {
 
     private fun getFirstChar(input: String): Option<Char> {
@@ -29,6 +30,7 @@ data class Message(
     fun getInitials() = nullable {
         "${getFirstChar(purpose).bind()} - ${getFirstChar(message).bind()}"
     }
+
     companion object
 }
 
@@ -76,4 +78,18 @@ data class TransmissionNgDto(
             ) { _, _ -> TransmissionNgDto(id, sender, receiver, extraInfo, messagePackage, timestamp) }
         }
     }
+}
+
+@Serializable
+data class SenderMessageDetail(
+    val sender: String?,
+    @Serializable(with = LocalDateTimeSerializer::class)
+    val packageTimestamp: LocalDateTime
+) {
+    override fun toString(): String =
+        """The sender:\n:
+            |$sender
+            has sent a message at:
+            |$packageTimestamp
+        """.trimMargin()
 }
