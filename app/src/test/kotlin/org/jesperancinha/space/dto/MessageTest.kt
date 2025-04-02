@@ -16,6 +16,15 @@ class MessageTest {
         )
         message.getInitials().shouldBeNull()
     }
+    @Test
+    fun `should validate message to null if empty message`() {
+        val message = Message(
+            id = -1,
+            purpose = "purpose",
+            message = ""
+        )
+        message.getInitials().shouldBeNull()
+    }
 
     @Test
     fun `should validate message to full message if purpose`() {
