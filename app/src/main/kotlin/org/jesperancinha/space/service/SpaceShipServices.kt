@@ -1,5 +1,7 @@
 package org.jesperancinha.space.service
 
+import arrow.core.Either
+import arrow.core.raise.either
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jesperancinha.space.dao.*
@@ -72,38 +74,44 @@ class MessageService {
 }
 
 class TransmissionService(private val messageService: MessageService) {
-
-    suspend fun createTransmission(transmission: TransmissionNgDto): TransmissionNgDto {
-        val messagePackage = transmission.messagePackage
-        messagePackage.messages.map { message ->
-            messageService.createMessage(message).id!!
-        }
-
-        return withContext(Dispatchers.IO) {
-            transaction {
-                val messagePackageId = MessagePackages
-                    .insertAndGetId {
-                        it[timestamp] = messagePackage.timestamp
-                    }
-
-                val transmissionId = Transmissions.insertAndGetId {
-                    it[sender] = transmission.sender
-                    it[receiver] = transmission.receiver
-                    it[extraInfo] = transmission.extraInfo
-                    it[Transmissions.messagePackage] = messagePackageId.value
-                    it[timestamp] = transmission.timestamp
+    suspend fun createTransmission(transmission: TransmissionNgDto): Either<String, TransmissionNgDto> = either {
+        transmission.validateTransmission()
+            .fold({
+                raise(it)
+            })
+            {
+                val messagePackage = transmission.messagePackage
+                messagePackage.messages.map { message ->
+                    messageService.createMessage(message).id!!
                 }
 
-                TransmissionNgDto(
-                    transmissionId.value,
-                    transmission.sender,
-                    transmission.receiver,
-                    transmission.extraInfo,
-                    transmission.messagePackage,
-                    transmission.timestamp
-                )
+                withContext(Dispatchers.IO) {
+                    transaction {
+                        val messagePackageId = MessagePackages
+                            .insertAndGetId {
+                                it[timestamp] = messagePackage.timestamp
+                            }
+
+                        val transmissionId = Transmissions.insertAndGetId {
+                            it[sender] = transmission.sender
+                            it[receiver] = transmission.receiver
+                            it[extraInfo] = transmission.extraInfo
+                            it[Transmissions.messagePackage] = messagePackageId.value
+                            it[timestamp] = transmission.timestamp
+                        }
+
+                        TransmissionNgDto(
+                            transmissionId.value,
+                            transmission.sender,
+                            transmission.receiver,
+                            transmission.extraInfo,
+                            transmission.messagePackage,
+                            transmission.timestamp
+                        )
+                    }
+                }
             }
-        }
+
     }
 
     suspend fun getTransmissions(): List<TransmissionNgDtoEntity> {

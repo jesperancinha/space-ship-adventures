@@ -40,20 +40,9 @@ data class TransmissionNgDto(
     @Serializable(with = LocalDateTimeSerializer::class)
     val timestamp: LocalDateTime = LocalDateTime.now()
 ) {
-    companion object {
-        fun validateTransmission(
-            id: Int?,
-            sender: String,
-            receiver: String,
-            extraInfo: String?,
-            messagePackage: MessagePackage,
-            timestamp: LocalDateTime,
-        ): Either<String, TransmissionNgDto> {
-            return either {
-                ensure(sender.isNotBlank()) { "Sender cannot be blank" }
-                ensure(receiver.isNotBlank()) { "Receiver cannot be blank" }
-                TransmissionNgDto(id, sender, receiver, extraInfo, messagePackage, timestamp)
-            }
-        }
+    fun validateTransmission(): Either<String, TransmissionNgDto> = either {
+        ensure(sender.isNotBlank()) { "Sender cannot be blank" }
+        ensure(receiver.isNotBlank()) { "Receiver cannot be blank" }
+        TransmissionNgDto(id, sender, receiver, extraInfo, messagePackage, timestamp)
     }
 }

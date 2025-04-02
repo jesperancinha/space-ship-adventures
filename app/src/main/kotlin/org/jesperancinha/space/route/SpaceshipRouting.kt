@@ -117,8 +117,12 @@ fun Application.configureSpaceRouting() {
 
             post {
                 val transmission = call.receive<TransmissionNgDto>()
-                val createdTransmission = transmissionService.createTransmission(transmission)
-                call.respond(HttpStatusCode.Created, createdTransmission)
+                transmissionService.createTransmission(transmission)
+                    .fold({
+                        call.respond(HttpStatusCode.InternalServerError, it)
+                    }) {
+                        call.respond(HttpStatusCode.Created, it)
+                    }
             }
         }
     }
