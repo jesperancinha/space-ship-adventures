@@ -26,14 +26,15 @@ class TransmissionNgDtoTest {
             ),
             timestamp = LocalDateTime.now()
         ),
-        timestamp = Option.fromNullable(LocalDateTime.now())
+        timestamp =LocalDateTime.now()
     )
         val validateTransmission = TransmissionNgDto.validateTransmission(
             transmissionNgDto.id,
             transmissionNgDto.sender,
             transmissionNgDto.receiver,
-            transmissionNgDto.timestamp,
+            transmissionNgDto.extraInfo,
             transmissionNgDto.messagePackage,
+            transmissionNgDto.timestamp,
         )
         validateTransmission.isLeft().shouldBeTrue()
         validateTransmission.leftOrNull().shouldNotBeNull()

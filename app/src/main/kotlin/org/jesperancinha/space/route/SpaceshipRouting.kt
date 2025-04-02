@@ -95,5 +95,4 @@ fun Application.configureSpaceRouting() {
             call.respond(HttpStatusCode.OK, "ok")
         }
     }
-
 }
