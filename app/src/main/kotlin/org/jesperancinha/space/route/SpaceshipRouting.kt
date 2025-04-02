@@ -1,5 +1,6 @@
 package org.jesperancinha.space.route
 
+import arrow.core.raise.nullable
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -21,6 +22,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.ktor.ext.inject
+import org.koin.logger.slf4jLogger
 
 fun Application.configureSpecialRouting() {
 
@@ -104,23 +106,28 @@ fun Application.configureSpaceRouting() {
     val messageService = MessageService()
     val transmissionService = TransmissionService(messageService)
     val messagesLens = TransmissionNgDto.messagePackage.messages
-val messagePackageLens = TransmissionNgDto.messagePackage
+    val messagePackageLens = TransmissionNgDto.messagePackage
 
     routing {
-        get("/users") {
-            call.respond(HttpStatusCode.OK, "ok")
-        }
-        get("/message") {
-            call.respond(HttpStatusCode.OK, "ok")
-        }
-
-        route ("/pieces") {
-            post ("/messages") {
+        route("/pieces") {
+            post("/messages") {
                 val transmission = call.receive<TransmissionNgDto>()
                 call.respond(HttpStatusCode.OK, messagesLens.get(transmission))
             }
-            post ("/package") {
+            post("/package") {
                 val transmission = call.receive<TransmissionNgDto>()
+                call.respond(HttpStatusCode.OK, messagePackageLens.get(transmission))
+            }
+            post("/retransmissions") {
+                val transmission = call.receive<TransmissionNgDto>()
+                messagesLens.get(transmission)
+                    .forEach {
+                        nullable {
+                            it.messageCC.bind()
+                            it.messageBcc.bind()
+                            println(it)
+                        }
+                    }
                 call.respond(HttpStatusCode.OK, messagePackageLens.get(transmission))
             }
         }

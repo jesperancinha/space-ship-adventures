@@ -17,7 +17,9 @@ import java.time.LocalDateTime
 data class Message(
     val id: Int? = null,
     val purpose: String,
-    val message: String
+    val message: String,
+    val messageBcc:String? = null,
+    val messageCC: String? = null
 ) {
 
     private fun getFirstChar(input: String): Option<Char> {
