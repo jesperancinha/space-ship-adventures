@@ -11,6 +11,7 @@ import org.jesperancinha.space.config.STMService
 import org.jesperancinha.space.dao.MessagePackages
 import org.jesperancinha.space.dao.Messages
 import org.jesperancinha.space.dao.Transmissions
+import org.jesperancinha.space.dto.Message
 import org.jesperancinha.space.dto.TransmissionNgDto
 import org.jesperancinha.space.service.MessageService
 import org.jesperancinha.space.service.TransmissionService
@@ -109,6 +110,18 @@ fun Application.configureSpaceRouting() {
         get("/message") {
             call.respond(HttpStatusCode.OK, "ok")
         }
+        route("/messages") {
+            get {
+                val messages = messageService.getMessages()
+                call.respond(messages)
+            }
+
+            post {
+                val message = call.receive<Message>()
+                val createdMessage = messageService.createMessage(message)
+                call.respond(HttpStatusCode.Created, createdMessage)
+            }
+        }
         route("/transmissions") {
             get {
                 val transmissions = transmissionService.getTransmissions()
@@ -123,6 +136,11 @@ fun Application.configureSpaceRouting() {
                     }) {
                         call.respond(HttpStatusCode.Created, it)
                     }
+            }
+
+            post("/ensemble") {
+                val transmission = call.receive<TransmissionNgDto>()
+
             }
         }
     }

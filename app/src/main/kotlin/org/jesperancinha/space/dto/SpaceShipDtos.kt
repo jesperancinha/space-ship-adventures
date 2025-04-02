@@ -1,9 +1,10 @@
 package org.jesperancinha.space.dto
 
-import arrow.core.Either
-import arrow.core.NonEmptyList
+import arrow.core.*
 import arrow.core.raise.either
 import arrow.core.raise.ensure
+import arrow.core.raise.nullable
+import arrow.core.raise.zipOrAccumulate
 import arrow.optics.optics
 import kotlinx.serialization.Serializable
 import org.jesperancinha.space.dao.LocalDateTimeSerializer
@@ -17,7 +18,16 @@ data class Message(
     val id: Int? = null,
     val purpose: String,
     val message: String
-)
+) {
+
+    private fun getFirstChar(input: String): Option<Char> {
+        return input.firstOrNull()?.some() ?: none()
+    }
+
+    fun getInitials() = nullable {
+        "${getFirstChar(purpose).bind()} - ${getFirstChar(message).bind()}"
+    }
+}
 
 @optics
 @Serializable
@@ -44,5 +54,21 @@ data class TransmissionNgDto(
         ensure(sender.isNotBlank()) { "Sender cannot be blank" }
         ensure(receiver.isNotBlank()) { "Receiver cannot be blank" }
         TransmissionNgDto(id, sender, receiver, extraInfo, messagePackage, timestamp)
+    }
+
+    companion object {
+        operator fun invoke(
+            id: Int? = null,
+            sender: String,
+            receiver: String,
+            extraInfo: String? = null,
+            messagePackage: MessagePackage,
+            timestamp: LocalDateTime = LocalDateTime.now()
+        ): Either<NonEmptyList<String>, Unit> = either {
+            zipOrAccumulate(
+                { ensure(sender.isNotBlank()) { "Sender cannot be blank" } },
+                { ensure(receiver.isNotBlank()) { "Receiver cannot be blank" } }
+            ) { _, _ -> TransmissionNgDto(id, sender, receiver, extraInfo, messagePackage, timestamp) }
+        }
     }
 }

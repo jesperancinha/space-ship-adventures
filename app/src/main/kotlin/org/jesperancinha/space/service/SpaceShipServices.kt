@@ -15,7 +15,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
 class MessageService {
-    suspend fun createMessage(message: Message): MessageEntity {
+    suspend fun createMessage(message: Message): Message {
+        message.getInitials()
         return withContext(Dispatchers.IO) {
             transaction {
                 val messageId = Messages
@@ -23,16 +24,16 @@ class MessageService {
                         it[purpose] = message.purpose
                         it[Messages.message] = message.message
                     }
-                MessageEntity(messageId.value, message.purpose, message.message)
+                Message(messageId.value, message.purpose, message.message)
             }
         }
     }
 
-    suspend fun getMessages(): List<MessageEntity> {
+    suspend fun getMessages(): List<Message> {
         return withContext(Dispatchers.IO) {
             transaction {
                 Messages.selectAll().map {
-                    MessageEntity(it[Messages.id].value, it[Messages.purpose], it[Messages.message])
+                    Message(it[Messages.id].value, it[Messages.purpose], it[Messages.message])
                 }
             }
         }
