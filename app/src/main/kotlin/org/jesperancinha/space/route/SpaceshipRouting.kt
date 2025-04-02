@@ -13,6 +13,8 @@ import org.jesperancinha.space.dao.Messages
 import org.jesperancinha.space.dao.Transmissions
 import org.jesperancinha.space.dto.Message
 import org.jesperancinha.space.dto.TransmissionNgDto
+import org.jesperancinha.space.dto.messagePackage
+import org.jesperancinha.space.dto.messages
 import org.jesperancinha.space.service.MessageService
 import org.jesperancinha.space.service.TransmissionService
 import org.jetbrains.exposed.sql.Database
@@ -101,6 +103,7 @@ fun Application.configureSpaceRouting() {
 
     val messageService = MessageService()
     val transmissionService = TransmissionService(messageService)
+    val messagesLens = TransmissionNgDto.messagePackage.messages
 
 
     routing {
@@ -109,6 +112,13 @@ fun Application.configureSpaceRouting() {
         }
         get("/message") {
             call.respond(HttpStatusCode.OK, "ok")
+        }
+
+        route ("/pieces") {
+            post ("/messages") {
+                val transmission = call.receive<TransmissionNgDto>()
+                call.respond(HttpStatusCode.OK, messagesLens.get(transmission))
+            }
         }
         route("/messages") {
             get {
@@ -140,7 +150,7 @@ fun Application.configureSpaceRouting() {
 
             post("/ensemble") {
                 val transmission = call.receive<TransmissionNgDto>()
-
+                transmission.messagePackage.messages
             }
         }
     }

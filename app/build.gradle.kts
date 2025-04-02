@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor)
     alias(libs.plugins.kotlin.plugin.serialization)
+    id("com.google.devtools.ksp") version "2.1.20-1.0.32"
 }
 
 group = "org.jesperancinha.space"
@@ -51,6 +52,9 @@ dependencies {
     implementation("io.arrow-kt:arrow-fx-coroutines")
     implementation("io.arrow-kt:arrow-resilience")
     implementation("io.arrow-kt:arrow-fx-stm")
+    implementation("io.arrow-kt:arrow-optics")
+    ksp("io.arrow-kt:arrow-optics-ksp-plugin:2.0.1")
+
     testImplementation("io.insert-koin:koin-test:4.0.4")
     testImplementation(platform("org.junit:junit-bom:5.12.1"))
     testImplementation("org.junit.jupiter:junit-jupiter-api")

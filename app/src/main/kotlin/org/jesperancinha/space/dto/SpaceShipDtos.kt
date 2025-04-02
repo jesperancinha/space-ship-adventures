@@ -27,6 +27,7 @@ data class Message(
     fun getInitials() = nullable {
         "${getFirstChar(purpose).bind()} - ${getFirstChar(message).bind()}"
     }
+    companion object
 }
 
 @optics
@@ -36,7 +37,9 @@ data class MessagePackage(
     val messages: NonEmptyList<Message>,
     @Serializable(with = LocalDateTimeSerializer::class)
     val timestamp: LocalDateTime = LocalDateTime.now()
-)
+) {
+    companion object
+}
 
 @optics
 @Serializable
