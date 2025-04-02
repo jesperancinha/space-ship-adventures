@@ -29,4 +29,5 @@ fun Application.module() {
     configureSpecialRouting()
     configureSTMRouting()
     configureTransmissions()
+    configureSpaceRouting()
 }

@@ -8,6 +8,8 @@ import io.ktor.server.routing.*
 import org.jesperancinha.space.config.FleetUserService
 import org.jesperancinha.space.config.FleetUserService.FleetUser
 import org.jesperancinha.space.config.STMService
+import org.jesperancinha.space.dto.TransmissionNgDto
+import org.jesperancinha.space.service.Transmission
 import org.koin.ktor.ext.inject
 
 fun Application.configureSpecialRouting() {
@@ -87,9 +89,10 @@ fun Application.configureSpaceRouting() {
         get("/message") {
             call.respond(HttpStatusCode.OK, "ok")
         }
-        put("/transmission") {
+        post("/transmission") {
+            val request = call.receive<TransmissionNgDto>()
+            println(request)
             call.respond(HttpStatusCode.OK, "ok")
-
         }
     }
 

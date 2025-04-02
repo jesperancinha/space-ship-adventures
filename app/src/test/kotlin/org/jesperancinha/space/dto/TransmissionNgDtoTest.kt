@@ -5,6 +5,7 @@ import arrow.core.nonEmptyListOf
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.should
+import io.kotest.matchers.types.shouldBeTypeOf
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
@@ -36,8 +37,6 @@ class TransmissionNgDtoTest {
         )
         validateTransmission.isLeft().shouldBeTrue()
         validateTransmission.leftOrNull().shouldNotBeNull()
-            .should {
-                println(it)
-            }
+            .shouldBeTypeOf<String>()
     }
 }

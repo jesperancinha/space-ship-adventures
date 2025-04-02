@@ -1,6 +1,10 @@
 package org.jesperancinha.space.dao
 
+import arrow.core.NonEmptyList
+import arrow.core.nonEmptyListOf
+import arrow.core.toNonEmptyListOrNull
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -70,5 +74,19 @@ object LocalDateTimeSerializer : KSerializer<LocalDateTime> {
 
     override fun deserialize(decoder: Decoder): LocalDateTime {
         return LocalDateTime.parse(decoder.decodeString(), formatter)
+    }
+}
+
+class NonEmptyListSerializer<T>(private val dataSerializer: KSerializer<T>) : KSerializer<NonEmptyList<T>> {
+    override val descriptor: SerialDescriptor =
+        ListSerializer(dataSerializer).descriptor
+
+    override fun serialize(encoder: Encoder, value: NonEmptyList<T>) {
+        ListSerializer(dataSerializer).serialize(encoder, value.toList())
+    }
+
+    override fun deserialize(decoder: Decoder): NonEmptyList<T> {
+        val list = ListSerializer(dataSerializer).deserialize(decoder)
+        return list.toNonEmptyListOrNull() ?: throw IllegalArgumentException("List cannot be empty")
     }
 }
