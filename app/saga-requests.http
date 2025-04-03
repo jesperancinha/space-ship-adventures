@@ -1,0 +1,22 @@
+###
+GET http://localhost:8080/simple/users/1
+Content-Type: application/json
+
+###
+PUT http://localhost:8080/simple/users/1/register
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Whatever",
+  "email": "WhateverEmail@whatever.com",
+  "telephone": "12321",
+  "bankAccountNumber": "123444",
+  "department": "Dep",
+  "chamber": "Chamber"
+}
+
+
+###
+GET http://localhost:8080/simple/users/1
+Content-Type: application/json
