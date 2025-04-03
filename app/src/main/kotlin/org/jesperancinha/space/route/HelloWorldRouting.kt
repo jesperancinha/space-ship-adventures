@@ -1,5 +1,9 @@
 package org.jesperancinha.space.route
 
+import arrow.core.Option
+import arrow.core.none
+import arrow.core.raise.option
+import arrow.core.some
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
@@ -15,7 +19,7 @@ fun Application.configureRouting() {
     install(SSE)
     install(StatusPages) {
         exception<Throwable> { call, cause ->
-            call.respondText(text = "500: $cause" , status = HttpStatusCode.InternalServerError)
+            call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
         }
     }
 
@@ -46,6 +50,16 @@ fun Application.configureSTMRouting() {
             stmService.addStimulus()
             call.respond(HttpStatusCode.OK, stmService.currentBalance())
 
+        }
+
+        fun compute(): Option<Int> = option {
+            val a = 10.some().bind()
+            val b = none<Int>().bind()
+            a + b
+        }
+
+        get("/nobinding") {
+            call.respond(HttpStatusCode.OK, compute())
         }
     }
 }
