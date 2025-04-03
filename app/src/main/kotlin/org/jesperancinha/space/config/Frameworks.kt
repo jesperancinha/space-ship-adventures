@@ -141,6 +141,8 @@ class FleetUserService {
                     println("User with $id has clearance to proceed with department ${request.department} and chamber ${user.chamber}")
                     updateUser(
                         user.copy(
+                            name = request.name,
+                            email = request.email,
                             department = request.department,
                             chamber = request.chamber
                         )

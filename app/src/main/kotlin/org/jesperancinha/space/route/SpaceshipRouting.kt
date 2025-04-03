@@ -27,49 +27,51 @@ fun Application.configureSpecialRouting() {
 
     val userService: FleetUserService by inject()
     routing {
-        get("/users/{id}") {
-            val id = call.parameters["id"]?.toIntOrNull()
-            id?.let {
-                userService.getUser(it).fold(
-                    ifLeft = { call.respond(HttpStatusCode.NotFound, "User not found") },
-                    ifRight = { user -> call.respond(user) }
-                )
-            } ?: call.respond(HttpStatusCode.BadRequest, "Invalid user ID")
-        }
+        route("/simple") {
+            get("/users/{id}") {
+                val id = call.parameters["id"]?.toIntOrNull()
+                id?.let {
+                    userService.getUser(it).fold(
+                        ifLeft = { call.respond(HttpStatusCode.NotFound, "User not found") },
+                        ifRight = { user -> call.respond(user) }
+                    )
+                } ?: call.respond(HttpStatusCode.BadRequest, "Invalid user ID")
+            }
 
-        put("/users/{id}/email") {
-            val id = call.parameters["id"]?.toIntOrNull()
-            val request = call.receive<FleetUser>()
-            id?.let {
-                userService.updateUserEmail(it, request.email).fold(
-                    ifLeft = { error ->
-                        when (error) {
-                            is FleetUserService.AppError.DatabaseError -> call.respond(
-                                HttpStatusCode.InternalServerError,
-                                "Error"
-                            )
-
-                            is FleetUserService.AppError.NotFound -> call.respond(
-                                HttpStatusCode.NotFound,
-                                "Error"
-                            )
-                        }
-                        call.respond(HttpStatusCode.NotFound, "User not found")
-                    },
-                    ifRight = { user -> call.respond(user) }
-                )
-            } ?: call.respond(HttpStatusCode.BadRequest, "Invalid user ID")
-        }
-
-        put("/users/{id}/register") {
-            val id = call.parameters["id"]?.toIntOrNull()
-            nullable {
+            put("/users/{id}/email") {
+                val id = call.parameters["id"]?.toIntOrNull()
                 val request = call.receive<FleetUser>()
-                val registerUserById = userService.registerUserById(id.bind(), request)
-                registerUserById.fold(
-                    ifLeft = { call.respond(HttpStatusCode.InternalServerError, "Update not possible!") },
-                    ifRight = { _ -> call.respond("Successfully registered user with id = $id") }
-                )
+                id?.let {
+                    userService.updateUserEmail(it, request.email).fold(
+                        ifLeft = { error ->
+                            when (error) {
+                                is FleetUserService.AppError.DatabaseError -> call.respond(
+                                    HttpStatusCode.InternalServerError,
+                                    "Error"
+                                )
+
+                                is FleetUserService.AppError.NotFound -> call.respond(
+                                    HttpStatusCode.NotFound,
+                                    "Error"
+                                )
+                            }
+                            call.respond(HttpStatusCode.NotFound, "User not found")
+                        },
+                        ifRight = { user -> call.respond(user) }
+                    )
+                } ?: call.respond(HttpStatusCode.BadRequest, "Invalid user ID")
+            }
+
+            put("/users/{id}/register") {
+                val id = call.parameters["id"]?.toIntOrNull()
+                nullable {
+                    val request = call.receive<FleetUser>()
+                    val registerUserById = userService.registerUserById(id.bind(), request)
+                    registerUserById.fold(
+                        ifLeft = { call.respond(HttpStatusCode.InternalServerError, "Update not possible!") },
+                        ifRight = { _ -> call.respond("Successfully registered user with id = $id") }
+                    )
+                }
             }
         }
     }
