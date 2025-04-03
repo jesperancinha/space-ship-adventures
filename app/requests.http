@@ -151,3 +151,21 @@ GET http://localhost:8080/transmissions/full
 
 ###
 GET http://localhost:8080/messages/purposes
+
+###
+POST http://localhost:8080/pieces/phantom
+Content-Type: application/json
+
+{
+  "sender": "You",
+  "receiver": "Me",
+  "extraInfo": "",
+  "messagePackage": {
+    "messages": [
+      {
+        "purpose": "purpose",
+        "message": "message"
+      }
+    ]
+  }
+}

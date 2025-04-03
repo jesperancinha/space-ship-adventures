@@ -93,3 +93,14 @@ data class SenderMessageDetail(
             |$packageTimestamp
         """.trimMargin()
 }
+
+@Serializable
+data class TransmissionNgDtoEntity(
+    val id: Int?,
+    val sender: String,
+    val receiver: String,
+    val extraInfo: String?,
+    val messagePackageId: Int,
+    @Serializable(with = LocalDateTimeSerializer::class)
+    val timestamp: LocalDateTime
+)

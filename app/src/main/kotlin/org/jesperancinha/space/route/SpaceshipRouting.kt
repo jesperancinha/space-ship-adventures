@@ -1,6 +1,7 @@
 package org.jesperancinha.space.route
 
 import arrow.core.raise.nullable
+import arrow.core.toNonEmptyListOrNull
 import arrow.fx.coroutines.parMap
 import arrow.fx.coroutines.parZip
 import io.ktor.http.*
@@ -111,6 +112,20 @@ fun Application.configureSpaceRouting() {
             post("/messages") {
                 val transmission = call.receive<TransmissionNgDto>()
                 call.respond(HttpStatusCode.OK, messagesLens.get(transmission))
+            }
+            post("/phantom") {
+                val transmission = call.receive<TransmissionNgDto>()
+                val modified = messagesLens.set(
+                    transmission, listOf(
+                        Message(
+                            id = 0,
+                            purpose = "phantom purpose",
+                            message = "phantom message",
+                            packageId = 0
+                        )
+                    ).toNonEmptyListOrNull() ?: throw RuntimeException("Invalid phantom")
+                )
+                call.respond(HttpStatusCode.OK, messagesLens.get(modified))
             }
             post("/package") {
                 val transmission = call.receive<TransmissionNgDto>()

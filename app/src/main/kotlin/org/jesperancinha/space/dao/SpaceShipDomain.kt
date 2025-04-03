@@ -1,9 +1,7 @@
 package org.jesperancinha.space.dao
 
-import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.javatime.datetime
-import java.time.LocalDateTime
 
 object Messages : IntIdTable() {
     val purpose = varchar("purpose", 255)
@@ -25,13 +23,3 @@ object Transmissions : IntIdTable() {
 
 data class MessageEntity(val id: Int?, val purpose: String, val message: String)
 
-@Serializable
-data class TransmissionNgDtoEntity(
-    val id: Int?,
-    val sender: String,
-    val receiver: String,
-    val extraInfo: String?,
-    val messagePackageId: Int,
-    @Serializable(with = LocalDateTimeSerializer::class)
-    val timestamp: LocalDateTime
-)
