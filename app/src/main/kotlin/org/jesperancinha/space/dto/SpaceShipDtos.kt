@@ -71,7 +71,7 @@ data class TransmissionNgDto(
             extraInfo: String? = null,
             messagePackage: MessagePackage,
             timestamp: LocalDateTime = LocalDateTime.now()
-        ): Either<NonEmptyList<String>, Unit> = either {
+        ): Either<NonEmptyList<String>, TransmissionNgDto> = either {
             zipOrAccumulate(
                 { ensure(sender.isNotBlank()) { "Sender cannot be blank" } },
                 { ensure(receiver.isNotBlank()) { "Receiver cannot be blank" } }
