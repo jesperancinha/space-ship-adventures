@@ -101,11 +101,12 @@ class FleetUserService {
     }
 
 
-    fun updateUser(user: FleetUser) {
+    fun updateUser(user: FleetUser): FleetUser {
         userDatabase[user.id] = user
+        return user
     }
 
-    suspend fun registerUserById(id: Int, request: FleetUser) =
+    suspend fun registerUserById(id: Int, request: FleetUser): Either<AppError, FleetUser> =
         either {
             saga {
                 val originalUser = extracted(id, true)
@@ -113,7 +114,10 @@ class FleetUserService {
                     raise(NotFound)
                 }
                 saga({
-                    val user = extracted(id, true)!!
+                    val user = extracted(id, true)
+                    ensure(user != null) {
+                        raise(NotFound)
+                    }
                     println("User with $id has clearance to proceed with telephone ${request.telephone}")
                     updateUser(user.copy(telephone = request.telephone))
                 }) {
@@ -122,8 +126,11 @@ class FleetUserService {
                     }
                 }
                 saga({
-                    val user = extracted(id, true)!!
+                    val user = extracted(id, true)
                     println("User with $id has clearance to proceed with bank account ${request.bankAccountNumber}")
+                    ensure(user != null) {
+                        raise(NotFound)
+                    }
                     updateUser(user.copy(bankAccountNumber = request.bankAccountNumber))
                 }) {
                     nullable {
