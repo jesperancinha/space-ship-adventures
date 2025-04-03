@@ -2,10 +2,10 @@ package org.jesperancinha.space.route
 
 import arrow.core.raise.nullable
 import arrow.core.toNonEmptyListOrNull
-import arrow.fx.coroutines.parMap
 import arrow.fx.coroutines.parZip
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.plugins.calllogging.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -22,6 +22,8 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.ktor.ext.inject
+import org.slf4j.event.Level
+import org.slf4j.event.Level.DEBUG
 
 fun Application.configureSpecialRouting() {
 
@@ -108,8 +110,12 @@ fun Application.configureSpaceRouting() {
     val transmissionService = TransmissionService(messageService)
     val messagesLens = TransmissionNgDto.messagePackage.messages
     val messagePackageLens = TransmissionNgDto.messagePackage
+    install(CallLogging){
+        level = DEBUG
+    }
 
     routing {
+
         route("/pieces") {
             post("/messages") {
                 val transmission = call.receive<TransmissionNgDto>()
