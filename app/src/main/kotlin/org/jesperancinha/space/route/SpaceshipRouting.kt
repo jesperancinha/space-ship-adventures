@@ -166,7 +166,6 @@ fun Application.configureSpaceRouting() {
             get("/full") {
                 val transmissions = transmissionService.getTransmissions()
                     .map {
-                        val messageEntities = messageService.getMessagesByPackageId(it.messagePackageId)
                         TransmissionNgDto(
                             id = it.id,
                             sender = it.sender,
