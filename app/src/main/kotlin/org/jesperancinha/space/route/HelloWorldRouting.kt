@@ -52,14 +52,25 @@ fun Application.configureSTMRouting() {
 
         }
 
-        fun compute(): Option<Int> = option {
-            val a = 10.some().bind()
-            val b = none<Int>().bind()
-            a + b
-        }
 
         get("/nobinding") {
             call.respond(HttpStatusCode.OK, compute())
         }
+        get("/binding") {
+            call.respond(HttpStatusCode.OK, computeOk())
+        }
     }
+}
+
+
+fun compute(): Option<Int> = option {
+    val a = 10.some().bind()
+    val b = none<Int>().bind()
+    a + b
+}
+
+fun computeOk(): Option<Int> = option {
+    val a = 10.some().bind()
+    val b = 20.some().bind()
+    a + b
 }
