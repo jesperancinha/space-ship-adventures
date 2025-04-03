@@ -22,7 +22,6 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.ktor.ext.inject
-import org.slf4j.event.Level
 import org.slf4j.event.Level.DEBUG
 
 fun Application.configureSpecialRouting() {
@@ -79,22 +78,6 @@ fun Application.configureSpecialRouting() {
     }
 }
 
-
-fun Application.configureSTMRouting() {
-
-    val stmService: STMService by inject()
-
-    routing {
-        get("/account") {
-            call.respond(HttpStatusCode.OK, stmService.currentBalance())
-        }
-        put("/account") {
-            stmService.addStimulus()
-            call.respond(HttpStatusCode.OK, stmService.currentBalance())
-
-        }
-    }
-}
 
 fun Application.configureSpaceRouting() {
 
@@ -204,11 +187,6 @@ fun Application.configureSpaceRouting() {
                     }) {
                         call.respond(HttpStatusCode.Created, it)
                     }
-            }
-
-            post("/ensemble") {
-                val transmission = call.receive<TransmissionNgDto>()
-                transmission.messagePackage.messages
             }
         }
     }

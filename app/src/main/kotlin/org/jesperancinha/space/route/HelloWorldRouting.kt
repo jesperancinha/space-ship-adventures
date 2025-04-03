@@ -7,6 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sse.*
 import io.ktor.sse.*
+import org.jesperancinha.space.config.STMService
 import org.jesperancinha.space.service.HelloService
 import org.koin.ktor.ext.inject
 
@@ -29,6 +30,22 @@ fun Application.configureRouting() {
         get("/log") {
             helloService.sayHello()
             call.respondText("Hello World!")
+        }
+    }
+}
+
+fun Application.configureSTMRouting() {
+
+    val stmService: STMService by inject()
+
+    routing {
+        get("/account") {
+            call.respond(HttpStatusCode.OK, stmService.currentBalance())
+        }
+        put("/account") {
+            stmService.addStimulus()
+            call.respond(HttpStatusCode.OK, stmService.currentBalance())
+
         }
     }
 }
