@@ -50,6 +50,9 @@ fun Application.configureRouting() {
             get("/test") {
                 call.respond(HttpStatusCode.Accepted, "Processing")
             }
+            get("/security") {
+                call.respondRedirect("/login")
+            }
         }
         get("/") {
             call.respondText("Hello World!")
