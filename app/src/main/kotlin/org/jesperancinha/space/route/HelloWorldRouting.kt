@@ -7,13 +7,18 @@ import arrow.core.some
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sse.*
 import io.ktor.sse.*
+import io.netty.handler.codec.DefaultHeaders
 import org.jesperancinha.space.config.STMService
 import org.jesperancinha.space.service.HelloService
 import org.koin.ktor.ext.inject
+import io.ktor.server.application.*
+import io.ktor.server.plugins.defaultheaders.*
+import io.ktor.server.response.*
 
 fun Application.configureRouting() {
     install(SSE)
@@ -22,9 +27,30 @@ fun Application.configureRouting() {
             call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
         }
     }
+    install(DefaultHeaders) {
+        header("X-Engine", "Ktor")
+    }
 
     val helloService by inject<HelloService>()
+
     routing {
+        route("/basic") {
+            get("/hello") {
+                call.respondText("Hello, Ktor!")
+            }
+            post("/submit") {
+                val data = call.receive<String>()
+                call.respondText("Received: $data")
+            }
+            get("/user") {
+                val id = call.parameters["id"]!!
+                call.response.headers.append("X-Version", "1.0")
+                call.respondText("User ID is $id")
+            }
+            get("/test") {
+                call.respond(HttpStatusCode.Accepted, "Processing")
+            }
+        }
         get("/") {
             call.respondText("Hello World!")
         }

@@ -11,7 +11,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jesperancinha.space.config.FleetUserService
 import org.jesperancinha.space.config.FleetUserService.FleetUser
-import org.jesperancinha.space.config.STMService
 import org.jesperancinha.space.dao.MessagePackages
 import org.jesperancinha.space.dao.Messages
 import org.jesperancinha.space.dao.Transmissions

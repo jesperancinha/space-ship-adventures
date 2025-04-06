@@ -1,12 +1,10 @@
 package org.jesperancinha.space.route
 
-import arrow.core.Option
 import arrow.core.none
 import arrow.core.some
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 
 class HelloWorldRoutingKtTest {
 

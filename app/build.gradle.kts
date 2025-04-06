@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.ktor.server.config.yaml)
     implementation(libs.swagger.codegen.generators)
     implementation(libs.exposed.java.time)
+    implementation("io.ktor:ktor-server-default-headers:3.1.2")
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
     implementation(platform(libs.arrow.stack))
@@ -54,6 +55,7 @@ dependencies {
     implementation("io.arrow-kt:arrow-resilience")
     implementation("io.arrow-kt:arrow-fx-stm")
     implementation("io.arrow-kt:arrow-optics")
+    testImplementation("io.ktor:ktor-server-test-host-jvm:3.1.2")
     ksp("io.arrow-kt:arrow-optics-ksp-plugin:2.0.1")
 
     testImplementation("io.insert-koin:koin-test:4.0.4")
