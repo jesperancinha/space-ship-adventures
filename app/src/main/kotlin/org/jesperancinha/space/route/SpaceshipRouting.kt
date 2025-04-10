@@ -92,7 +92,7 @@ fun Application.configureSpaceRouting() {
     val transmissionService = TransmissionService(messageService)
     val messagesLens = TransmissionNgDto.messagePackage.messages
     val messagePackageLens = TransmissionNgDto.messagePackage
-    install(CallLogging){
+    install(CallLogging) {
         level = DEBUG
     }
 
