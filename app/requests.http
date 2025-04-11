@@ -141,6 +141,11 @@ Content-Type: application/json
         "message": "message",
         "messageCC": "message3",
         "messageBcc": "message3"
+      },
+      {
+        "purpose": "purpose",
+        "message": "message",
+        "messageBcc": "message3"
       }
     ]
   }

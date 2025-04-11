@@ -129,7 +129,7 @@ fun Application.configureSpaceRouting() {
                             it.messageCC.bind()
                             it.messageBcc.bind()
                             println(it)
-                        }
+                        } ?: println(null)
                     }
                 call.respond(HttpStatusCode.OK, messagePackageLens.get(transmission))
             }
@@ -141,7 +141,7 @@ fun Application.configureSpaceRouting() {
             }
             get("/purposes") {
                 val messages = messageService.getMessages()
-                val senderMessageDetails = messages.map {
+                val senderMessageDetails = messages.mapNotNull {
                     nullable {
                         parZip({
                             transmissionService.getTransmissionByPackageId(it.packageId.bind()).bind().sender

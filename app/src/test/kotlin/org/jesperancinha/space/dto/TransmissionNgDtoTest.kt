@@ -37,7 +37,7 @@ class TransmissionNgDtoTest {
 
     @Test
     fun `should invalidate transmission and accumulate errors`() {
-        val transmissionNgDto = TransmissionNgDto. invoke(
+        val eitherTransmissionNgDto = TransmissionNgDto. invoke(
             id = 1,
             sender = "",
             receiver = "",
@@ -53,7 +53,7 @@ class TransmissionNgDtoTest {
             ),
             timestamp = LocalDateTime.now()
         )
-        transmissionNgDto.leftOrNull()
+        eitherTransmissionNgDto.leftOrNull()
             .shouldNotBeNull()
             .shouldHaveSize(2)
     }
