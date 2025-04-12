@@ -1,7 +1,9 @@
 package org.jesperancinha.space.service
 
+import arrow.core.toNonEmptyListOrNull
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
@@ -37,4 +39,11 @@ class ErrorHandlingServiceTest {
         spaceship.isLeft().shouldBeTrue()
         spaceship.leftOrNull() shouldBe NoCrew
     }
+
+    @Test
+    fun testEmptyList() {
+        val list = emptyList<String>().toNonEmptyListOrNull()
+        list.shouldBeNull()
+    }
+
 }
