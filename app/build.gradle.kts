@@ -59,7 +59,7 @@ dependencies {
     ksp("io.arrow-kt:arrow-optics-ksp-plugin:2.0.1")
 
     testImplementation("io.insert-koin:koin-test:4.0.4")
-    testImplementation(platform("org.junit:junit-bom:5.12.1"))
+    testImplementation(platform("org.junit:junit-bom:5.12.2"))
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.junit.jupiter:junit-jupiter-engine")
     testImplementation("org.junit.platform:junit-platform-launcher")
