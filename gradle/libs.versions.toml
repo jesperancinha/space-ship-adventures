@@ -7,7 +7,7 @@ kotlin-version = "2.1.20"
 ktor-version = "3.1.2"
 logback-version = "1.5.18"
 postgres-version = "42.7.5"
-prometheus-version = "1.14.5"
+prometheus-version = "1.14.6"
 arrow-stack = "2.0.1"
 
 [libraries]
