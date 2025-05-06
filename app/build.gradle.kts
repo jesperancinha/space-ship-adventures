@@ -23,7 +23,7 @@ val kotestVersion = "5.9.1"
 dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.server.content.negotiation)
-    implementation("io.ktor:ktor-server-call-logging:3.1.2")
+    implementation("io.ktor:ktor-server-call-logging:3.1.3")
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.sessions)
     implementation(libs.koin.ktor)
