@@ -58,7 +58,7 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host-jvm:3.1.3")
     ksp("io.arrow-kt:arrow-optics-ksp-plugin:2.1.2")
 
-    testImplementation("io.insert-koin:koin-test:4.0.4")
+    testImplementation("io.insert-koin:koin-test:4.1.0")
     testImplementation(platform("org.junit:junit-bom:5.13.1"))
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.junit.jupiter:junit-jupiter-engine")
