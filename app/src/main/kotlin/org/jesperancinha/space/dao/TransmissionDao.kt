@@ -2,6 +2,8 @@ package org.jesperancinha.space.dao
 
 import arrow.core.NonEmptyList
 import arrow.core.toNonEmptyListOrNull
+import io.ktor.server.util.toGMTDate
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind.STRING
@@ -14,12 +16,18 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insertAndGetId
+import org.jetbrains.exposed.sql.javatime.date
 import org.jetbrains.exposed.sql.javatime.datetime
+import org.jetbrains.exposed.sql.javatime.timestamp
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.sql.Timestamp
+import java.time.Instant.now
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
+import kotlin.time.Instant
 
 
 class TransmissionService(database: Database) {
@@ -27,7 +35,7 @@ class TransmissionService(database: Database) {
         val sender = varchar("sender", 50)
         val receiver = varchar("receiver", 50)
         val message = text("message")
-        val timestamp = datetime("timestamp").clientDefault { LocalDateTime.now() }
+        val timestamp = timestamp("timestamp").clientDefault { now() }
     }
 
     init {
@@ -56,7 +64,7 @@ class TransmissionService(database: Database) {
                     it[TransmissionsOld.sender],
                     it[TransmissionsOld.receiver],
                     it[TransmissionsOld.message],
-                    it[TransmissionsOld.timestamp]
+                    it[TransmissionsOld.timestamp].atZone(ZoneId.systemDefault()).toLocalDateTime()
                 )
             }
         }
