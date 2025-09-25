@@ -2,6 +2,7 @@ package org.jesperancinha.space.dao
 
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.javatime.datetime
+import org.jetbrains.exposed.sql.javatime.timestamp
 
 object Messages : IntIdTable() {
     val purpose = varchar("purpose", 255)
@@ -10,7 +11,7 @@ object Messages : IntIdTable() {
 }
 
 object MessagePackages : IntIdTable() {
-    val timestamp = datetime("timestamp")
+    val timestamp = timestamp("timestamp")
 }
 
 object Transmissions : IntIdTable() {
@@ -18,7 +19,7 @@ object Transmissions : IntIdTable() {
     val receiver = varchar("receiver", 255)
     val extraInfo = varchar("extraInfo", 255).nullable()
     val messagePackage = reference("messagePackage", MessagePackages)
-    val timestamp = datetime("timestamp")
+    val timestamp = timestamp("timestamp")
 }
 
 data class MessageEntity(val id: Int?, val purpose: String, val message: String)

@@ -21,7 +21,10 @@ import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 
 class MessageService {
     suspend fun createMessage(message: Message, packageIdValue: Int): Message {
@@ -75,7 +78,7 @@ class MessageService {
                 MessagePackages.selectAll().where { MessagePackages.id eq id }.map {
                     MessagePackage(
                         messages =
-                        runBlocking { getMessagesByPackageId(id) }, timestamp = it[MessagePackages.timestamp]
+                        runBlocking { getMessagesByPackageId(id) }, timestamp = it[MessagePackages.timestamp].atZone(ZoneId.systemDefault()).toLocalDateTime()
                     )
                 }.single()
             }
@@ -119,7 +122,7 @@ class TransmissionService(private val messageService: MessageService) {
                    val messagePackageId = transaction {
                         MessagePackages
                             .insertAndGetId {
-                                it[timestamp] = LocalDateTime.now()
+                                it[timestamp] = Instant.now()
                             }
                     }
                     transaction {
@@ -133,7 +136,7 @@ class TransmissionService(private val messageService: MessageService) {
                             it[receiver] = transmission.receiver
                             it[extraInfo] = transmission.extraInfo
                             it[Transmissions.messagePackage] = messagePackageId.value
-                            it[timestamp] = transmission.timestamp
+                            it[timestamp] = transmission.timestamp.toInstant(ZoneOffset.UTC)
                         }
 
                         TransmissionNgDto(
@@ -161,7 +164,7 @@ class TransmissionService(private val messageService: MessageService) {
                         it[Transmissions.receiver],
                         it[Transmissions.extraInfo],
                         messagePackageId.value,
-                        it[Transmissions.timestamp]
+                        it[Transmissions.timestamp].atZone(ZoneId.systemDefault()).toLocalDateTime()
                     )
                 }
             }
@@ -181,7 +184,7 @@ class TransmissionService(private val messageService: MessageService) {
                             it[Transmissions.receiver],
                             it[Transmissions.extraInfo],
                             messagePackageId.value,
-                            it[Transmissions.timestamp]
+                            it[Transmissions.timestamp].atZone(ZoneId.systemDefault()).toLocalDateTime()
                         )
                     }.singleOrNull()
             }
@@ -201,7 +204,7 @@ class TransmissionService(private val messageService: MessageService) {
                             it[Transmissions.receiver],
                             it[Transmissions.extraInfo],
                             messagePackageId.value,
-                            it[Transmissions.timestamp]
+                            it[Transmissions.timestamp].atZone(ZoneId.systemDefault()).toLocalDateTime()
                         )
                     }.singleOrNull()
             }
@@ -216,7 +219,7 @@ class TransmissionService(private val messageService: MessageService) {
                     it[receiver] = transmission.receiver
                     it[extraInfo] = transmission.extraInfo
                     it[messagePackage] = transmission.messagePackage.hashCode()
-                    it[timestamp] = transmission.timestamp
+                    it[timestamp] = transmission.timestamp.toInstant(ZoneOffset.UTC)
                 }
                 if (updatedRowCount > 0) {
                     TransmissionNgDtoEntity(
