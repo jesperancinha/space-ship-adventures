@@ -8,7 +8,7 @@ ktor-version = "3.3.1"
 logback-version = "1.5.20"
 postgres-version = "42.7.8"
 prometheus-version = "1.15.5"
-arrow-stack = "2.1.2"
+arrow-stack = "2.2.0"
 
 [libraries]
 arrow-stack = { module = "io.arrow-kt:arrow-stack", version.ref = "arrow-stack" }
