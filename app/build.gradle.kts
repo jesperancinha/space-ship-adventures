@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor)
     alias(libs.plugins.kotlin.plugin.serialization)
-    id("com.google.devtools.ksp") version "2.3.3"
+    id("com.google.devtools.ksp") version "2.3.4"
 }
 
 group = "org.jesperancinha.space"
