@@ -56,7 +56,7 @@ dependencies {
     implementation("io.arrow-kt:arrow-fx-stm")
     implementation("io.arrow-kt:arrow-optics")
     testImplementation("io.ktor:ktor-server-test-host-jvm:3.3.3")
-    ksp("io.arrow-kt:arrow-optics-ksp-plugin:2.2.0")
+    ksp("io.arrow-kt:arrow-optics-ksp-plugin:2.2.1.1")
 
     testImplementation("io.insert-koin:koin-test:4.1.1")
     testImplementation(platform("org.junit:junit-bom:6.0.1"))
